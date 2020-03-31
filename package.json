@@ -10,11 +10,15 @@
     "build:ui": "del build && cd ../puhelinluettelo && npm run build --prod && xcopy build ..\\puhelinluettelo_backend\\build\\ /e /s /y",
     "deploy": "git push master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+	"lint": "eslint ."
   },
   "author": "Aapo Laakkio",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
     "nodemon": "^2.0.2"
   },
   "dependencies": {

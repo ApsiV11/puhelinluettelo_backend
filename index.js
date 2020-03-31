@@ -12,16 +12,16 @@ app.use(express.static('build'))
 
 app.use(express.json())
 
-morgan.token('body', (request, response) => {
-  if(request.method==="POST"){
+morgan.token('body', (request) => {
+  if(request.method==='POST'){
     return JSON.stringify(request.body)
   }
   else{
-      null
+    null
   }
 })
 
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body)'))
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
@@ -38,18 +38,18 @@ app.get('/api/persons/:id', (request, response, next) => {
       response.status(404).end()
     }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-    Person.findByIdAndRemove(request.params.id).then(person => {
-      if (person) {
-        response.json(person.toJSON())
-      } 
-      else {
-        response.status(404).end()
-      }
-    })
+  Person.findByIdAndRemove(request.params.id).then(person => {
+    if (person) {
+      response.json(person.toJSON())
+    }
+    else {
+      response.status(404).end()
+    }
+  })
     .catch(error => next(error))
 })
 
@@ -62,43 +62,43 @@ app.put('/api/persons/:id', (request, response, next) => {
   }
 
   if(person.name.length<2 ||person.number.length<7){
-    response.status(403).json({"error":
-      `Name must be atleast three characters long and number eight characters long`,
-    "status": 403})
+    response.status(403).json({ 'error':
+      'Name must be atleast three characters long and number eight characters long',
+    'status': 403 })
   }
 
   else{
     Person.findByIdAndUpdate(request.params.id, person, { new: true })
-    .then(updatedPerson => {
-      if(updatedPerson){
-        response.json(updatedPerson.toJSON())
-      }
-      else{
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+      .then(updatedPerson => {
+        if(updatedPerson){
+          response.json(updatedPerson.toJSON())
+        }
+        else{
+          response.status(404).end()
+        }
+      })
+      .catch(error => next(error))
   }
 })
 
 app.post('/api/persons', (request, response, next) => {
-    const data=request.body
-    
-    if(data.name===null || data.number===null){
-        response.status(400).json({"error":"Name or number can't be empty"})
-    }
+  const data=request.body
 
-    else{
-        const newPerson= new Person({
-            name: data.name,
-            number: data.number
-        })
+  if(data.name===null || data.number===null){
+    response.status(400).json({ 'error':'Name or number cant be empty' } )
+  }
 
-        newPerson.save().then(savedPerson => {
-          response.json(savedPerson.toJSON())
-        })
-        .catch(error => next(error))
-    }
+  else{
+    const newPerson= new Person({
+      name: data.name,
+      number: data.number
+    })
+
+    newPerson.save().then(savedPerson => {
+      response.json(savedPerson.toJSON())
+    })
+      .catch(error => next(error))
+  }
 })
 
 app.get('/info', (request, response) => {
@@ -132,6 +132,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
